@@ -1,0 +1,35 @@
+{
+  "name": "visvalingamwhyatt",
+  "version": "1.0.0",
+  "description": "An implementation of the visvalingam-whyatt algorithm for typescript",
+  "main": "index.ts",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clbrem/VisvalingamWhyatt.git"
+  },
+  "keywords": [
+    "visvalingam-whyatt",
+    "visvalingam",
+    "whyatt",
+    "polygon",
+    "point-reduction"
+  ],
+  "author": "clbrem.me",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/clbrem/VisvalingamWhyatt/issues"
+  },
+  "homepage": "https://github.com/clbrem/VisvalingamWhyatt#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.4",
+    "jest": "^29.6.4",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@datastructures-js/priority-queue": "^6.3.0"
+  }
+}
