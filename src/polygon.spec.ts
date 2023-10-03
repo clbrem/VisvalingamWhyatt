@@ -1,5 +1,6 @@
 import { Vertex, Point } from "./polygon";
 import { MinPriorityQueue, IGetCompareValue } from "@datastructures-js/priority-queue";
+import { PolygonQueue } from "./polygon-queue";
 test("Inf", () => {expect(Infinity).toBeGreaterThan(1)});
 
 test ("Polygon operations", () => {
@@ -32,11 +33,19 @@ test("MapTests", () => {
     let myMultigon = [mySquare, friendSquare]
     let pointMap = Point.ofPolygons<[number,number]>(new Map())(myMultigon)
     let myQueue = MinPriorityQueue.fromArray<Point<[number,number]>>([...pointMap.values()], p => p.coefficient())
-    console.log(myQueue)
+
     let first = myQueue.dequeue()
-    console.log(first)
+
     first.remove()
-    console.log(first)
-    console.log(myQueue.dequeue())    
-        
+
+})
+
+test("QueueTests", () => {
+    let myPolys: [number,number][][] = [[[0,0],[1,0],[1,1], [0,1]],[[1,0],[2,0],[2,1], [1,1]]]
+    let myQueue = PolygonQueue.fromPolygons(myPolys)
+    myQueue.dequeue()
+    myQueue.dequeue()
+    let unraveled = myQueue.unravel()
+    console.log(unraveled)
+
 })

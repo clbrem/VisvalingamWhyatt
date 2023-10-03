@@ -1,9 +1,8 @@
 export class Vertex<T> {        
-    readonly neighbors: [Vertex<T> | undefined, Vertex<T> | undefined ]    
-    public removed: boolean;
-    constructor(public readonly coordinates: [number, number], public readonly value: T) {        
-        this.neighbors = [undefined, undefined];
-        this.removed = false;
+    readonly neighbors: [Vertex<T> | undefined, Vertex<T> | undefined ]        
+    public readonly id: string = this.stringify();
+    constructor(public readonly coordinates: [number, number], public readonly value: T) {                
+        this.neighbors = [undefined, undefined];        
     }
     stringify(): string {
         return `(${this.coordinates[0]},${this.coordinates[1]})`
@@ -16,6 +15,16 @@ export class Vertex<T> {
     }
     isMinimal(): boolean {
         return this.previous() && this.next() && this.previous()?.previous() === this.next() ? true : false;
+    }
+    trace(): Vertex<T>[] {        
+        let out = [this as Vertex<T>]
+        let id = this.id
+        let curr = this.next()
+        while (curr && curr?.id !== this.id ) {
+            out.push(curr)
+            curr = curr?.next()
+        }
+        return out
     }
     coefficient(): number 
     {
@@ -30,11 +39,8 @@ export class Vertex<T> {
         let next = this.next();
         previous && previous.next(next);
         next && next.previous(previous);
-        this.removed = true;
     }
-    invalidate() {
-        this.removed = true;
-    }
+
     static ofList = <T>(mapping: (item:T) => [number,number]) => (list: T[]) => {
         let first = list[0] && mapping(list[0])        
         let reduced = 
@@ -48,7 +54,7 @@ export class Vertex<T> {
                 }
             }, { acc: [],  prev: undefined}
             )        
-        reduced.prev&&console.log(reduced.prev.coordinates)
+        
         if (reduced.prev && reduced.prev.coordinates[0] === first[0] && reduced.prev.coordinates[1] === first[1]) {
             let prev = reduced.prev.previous()
             reduced.prev.remove()
@@ -69,9 +75,9 @@ export class Vertex<T> {
 } 
 
 export class Point<T> {
+    public readonly id: string = this.stringify();
     constructor (public readonly coordinates: [number,number], public readonly vertices: Vertex<T>[]){}
-    public removed: boolean = false;
-
+    
     private static Combine<T>(point: Point<T>| undefined, sndPoint: Point<T>) {
         return typeof point == 'undefined' 
                ? sndPoint                
@@ -87,8 +93,7 @@ export class Point<T> {
         return !!this.vertices.find(vertex => vertex.isMinimal()) ;
     }
     remove(): void { 
-        this.vertices.forEach(vertex => vertex.remove());
-        this.removed = true;
+        this.vertices.forEach(vertex => vertex.remove());    
     }
     coefficient(): number {
         return this.vertices.map(vertex => vertex.coefficient()).reduce((a,b) => a + b, 0);
@@ -107,7 +112,7 @@ export class Point<T> {
             }, map
             )
     static ofPolygons = <T>(map: Map<string, Point<T>>) => (polygons: Vertex<T>[] []) => 
-        polygons.reduce((prev, curr) => Point.ofPolygon<T>(prev)(curr), new Map())
+        polygons.reduce((prev, curr) => Point.ofPolygon<T>(prev)(curr), new Map<string,Point<T>>())
 
     
 }
